@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 })
 
 app.use(express.json())
-app.use('/images',express.static(path.join('images')))
+app.use('/api/images',express.static(path.join('images')))
 app.use("/api/auth", authRoute)
 app.use("/api/shop", shopRoute)
 

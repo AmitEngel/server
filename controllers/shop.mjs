@@ -23,12 +23,12 @@ const getItems = (req, res, next) => {
  * @param {express.Response} res
  */
 const addItemToShop = (req, res) => {
-    const url = req.protocol + '://' + req.get("host")
+    //const url = req.protocol + '://' + req.get("host")
     const item = new Item({
         name: req.body.name,
         price: req.body.price,
         category: req.body.category,
-        imagePath: url + "/images/" + req.file.filename,
+        imagePath: "/images/" + req.file.filename,
     })
     item.save().then(newItem => {
         res.status(201).json({
@@ -51,8 +51,8 @@ const addItemToShop = (req, res) => {
 const updateItem = (req, res) => {
     let imagePath = req.body.imagePath;
     if (req.file) {
-        const url = req.protocol + '://' + req.get("host")
-        imagePath = url + "/images/" + req.file.filename
+        //const url = req.protocol + '://' + req.get("host")
+        imagePath = "/images/" + req.file.filename
     }
     const item = new Item({
         _id: req.body._id,
