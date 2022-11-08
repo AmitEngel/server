@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors'
 import path from 'path';
 import {config} from 'dotenv'
 import mongoose from "mongoose";
@@ -8,7 +9,7 @@ config()
 
 const app = express()
 const PORT = 4286;
-
+app.use(cors('https://bestshopping.onrender.com'))
 
 mongoose.connect(`mongodb+srv://amit:${process.env.MONGO_ATLAS_PW}@cluster0.kcdgtly.mongodb.net/shop?retryWrites=true&w=majority`)
     .then(() => console.log("Connected to database!"))
