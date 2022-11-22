@@ -3,6 +3,7 @@ import { extractFile } from '../middlewares/image-upload.mjs'
 import { checkAuth } from '../middlewares/check-auth.mjs'
 import {
     getItems,
+    getCategories,
     getItemById,
     addItemToShop,
     updateItem,
@@ -19,6 +20,7 @@ const shopRoute = express.Router()
 
 shopRoute.get('/', getItems)
 shopRoute.use(checkAuth)
+shopRoute.get('/categories', getCategories)
 shopRoute.get('/edit/:itemId', getItemById)
 shopRoute.post('/', extractFile, addItemToShop)
 shopRoute.put('/edit/:itemId', extractFile, updateItem)

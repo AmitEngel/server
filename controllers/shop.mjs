@@ -17,6 +17,20 @@ const getItems = (req, res, next) => {
         })
     })
 }
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const getCategories = async (req, res) => {
+    try {
+        const categories = await Item.find({}).select({ category: 1, _id: 0 })
+        return res.status(200).json(Array.from(new Set(categories.map(({ category }) => category))))
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message: error})
+    } 
+}
 
 /**
  * @param {express.Request} req
@@ -253,6 +267,7 @@ const orderItems = (req, res) => {
 
 export {
     getItems,
+    getCategories,
     getItemById,
     addItemToShop,
     updateItem,
