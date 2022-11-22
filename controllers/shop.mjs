@@ -174,7 +174,7 @@ const addItemToCart = async (req, res) => {
     const cartId = req.params.cartId
     const itemExist = await checkIfItemExists(req.body.itemId, cartId)
     if (itemExist) {
-        const updated = await Cart.updateOne({
+        await Cart.updateOne({
             _id: cartId,
             "items.itemId": req.body.itemId
         },
@@ -184,9 +184,8 @@ const addItemToCart = async (req, res) => {
                 "items.$.priceTotal": itemExist.priceTotal + req.body.priceTotal
 
             })
-        console.log(updated)
     } else {
-       Cart.updateOne(
+    const added = await Cart.updateOne(
             { _id: cartId },
             { $push: { items: req.body } }
         )
@@ -199,15 +198,18 @@ const addItemToCart = async (req, res) => {
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
-const deleteItemFromCart = async (req, res) => {
+const deleteItemFromCart = (req, res) => {
     const cartId = req.params.cartId;
     const itemId = req.params.itemId;
-    await Cart.updateOne(
-        { _id: cartId },
+    const deleted = Cart.updateOne(
+        {
+            _id: cartId,
+            "items.itemId": itemId
+        },
         { $pull: { "items": { "itemId":itemId } } },
-    ).then(responseData => {
-        console.log(responseData)
-        return res.status(200).json({message: 'delete successfull'})    
+    )
+    deleted.then(responseData => {
+        return res.status(200).json({message: 'delete successfull', item:responseData})    
     }).catch(err => {
         return res.status(500).json({message: err})
     })
