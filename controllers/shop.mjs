@@ -175,7 +175,7 @@ const checkIfItemExists = async (itemId, cartId) => {
         _id: 0
     })
     if (items.length > 0) {
-        return items.find(item => item.itemId === itemId)
+        return items.find(item => item.itemId == itemId)
     } else return null
 }
 
@@ -187,6 +187,7 @@ const checkIfItemExists = async (itemId, cartId) => {
 const addItemToCart = async (req, res) => {
     const cartId = req.params.cartId
     const itemExist = await checkIfItemExists(req.body.itemId, cartId)
+    
     if (itemExist) {
         await Cart.updateOne({
             _id: cartId,
@@ -199,11 +200,28 @@ const addItemToCart = async (req, res) => {
 
             })
     } else {
-    const added = await Cart.updateOne(
+    await Cart.updateOne(
             { _id: cartId },
             { $push: { items: req.body } }
         )
     }
+    return res.status(200).json(req.body)
+}
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const subtractItemFromCart = async (req, res) => {
+    const cartId = req.params.cartId;
+    await Cart.updateOne({
+        _id: cartId,
+        "items.itemId": req.body.itemId
+    },
+        {
+            "items.$.quantity": itemExist.quantity - req.body.quantity,
+            "items.$.priceTotal": itemExist.priceTotal - req.body.priceTotal
+        })
     return res.status(200).json(req.body)
 }
 
@@ -275,6 +293,7 @@ export {
     getCart,
     createCart,
     addItemToCart,
+    subtractItemFromCart,
     deleteItemFromCart,
     getOrdersByUserId,
     orderItems
